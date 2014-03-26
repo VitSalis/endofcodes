@@ -16,9 +16,8 @@ use OAuth\Common\Storage\Session;
 use OAuth\Common\Consumer\Credentials;
 
 class GithubController extends ControllerBase {
-    public function createView( $code = false, $go = false ) {
+    protected function getGithub() {
         global $config;
-        var_dump( $_GET );
 
         require_once 'OAuth/bootstrap.php';
 
@@ -34,23 +33,21 @@ class GithubController extends ControllerBase {
             $config[ 'github' ][ 'secret' ],
             $config[ 'base' ] . 'github/create'
         );
-        $gitHub = $serviceFactory->createService( 'GitHub', $credentials, $storage, array( 'user' ) );
+        $github = $serviceFactory->createService( 'GitHub', $credentials, $storage, array( 'user' ) );
+        return $github;
+    }
+    public function create( $code = false ) {
+        $github = $this->getGithub();
+        $github->requestAccessToken( $code );
 
-        if ( $code !== false ) {
-            $gitHub->requestAccessToken( $code );
+        $result = json_decode( $github->request( 'user/emails' ), true );
 
-            $result = json_decode( $gitHub->request( 'user/emails' ), true );
+        echo 'The first email on your github account is ' . $result[ 0 ];
+    }
+    public function createView( $code = false ) {
+        $github = $this->getGithub();
 
-            echo 'The first email on your github account is ' . $result[ 0 ];
-        }
-        else if ( !empty( $_GET[ 'go' ] ) && $_GET[ 'go' ] === 'go' ) {
-            $url = $gitHub->getAuthorizationUri();
-            header( 'Location: ' . $url );
-
-        }
-        else {
-            $url = $currentUri->getRelativeUri() . '?go=go';
-            echo "<a href='$url'>Login with Github!</a>";
-        }
+        $url = $github->getAuthorizationUri();
+        require_once 'views/github/create.php';
     }
 }
