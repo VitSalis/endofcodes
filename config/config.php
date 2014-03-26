@@ -28,7 +28,11 @@
             'forgot_password_exp_time' => 3600 * 24,
             'cli_max_width' => 120,
             'email' => 'team@endofcodes.com',
-            'base' => 'http://localhost/endofcodes/'
+            'base' => 'http://localhost/endofcodes/',
+            'github' => [
+                'id' => 'id_key',
+                'secret' => 'secret_key'
+            ]
         ],
         'test' => [
             'db' => [
@@ -58,7 +62,11 @@
             'forgot_password_exp_time' => 3600 * 24,
             'cli_max_width' => 120,
             'email' => 'team@endofcodes.com',
-            'base' => 'http://localhost/endofcodes/'
+            'base' => 'http://localhost/endofcodes/',
+            'github' => [
+                'id' => 'id_key',
+                'secret' => 'secret_key'
+            ]
         ]
     ];
 ?>
